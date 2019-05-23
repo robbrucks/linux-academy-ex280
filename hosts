@@ -1,0 +1,5 @@
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+192.168.10.10   master.example.com  master
+192.168.10.11   infra.example.com   infra
+192.168.10.12   compute.example.com compute

@@ -1,0 +1,30 @@
+[OSEv3:children]
+masters
+nodes
+etcd
+
+[OSEv3:vars]
+ansible_ssh_user=____YOUR_SSO____
+ansible_become=true
+os_firewall_use_firewalld=False
+openshift_deployment_type=origin
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider','filename': '/etc/origin/master/htpasswd'}]
+openshift_pkg_version='-3.9.0'
+openshift_master_default_subdomain=apps.okd.example.com
+openshift_disable_check=memory_availability,disk_availability
+retry_files_enabled=False
+retry_files_save_path="~/"
+openshift_public_ip=192.168.10.10
+BindAddress=192.168.10.10
+
+[masters]
+master.example.com
+
+[nodes]
+master.example.com openshift_ip=192.168.10.10
+infra.example.com openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_ip=192.168.10.11
+compute.example.com openshift_node_labels="{'region': 'primary', 'zone': 'east'}" openshift_ip=192.168.10.12
+
+[etcd]
+master.example.com
+
