@@ -60,6 +60,14 @@
 
        oc get clusterroles
 
+* List all role bindings in a project
+
+       oc get rolebindings
+
+* List all role bindings for the cluster
+
+       oc get clusterrolebindings
+
 * Remove roles from groups
 
        oc adm policy remove-cluster-role-from-group self-provisioner \
@@ -350,6 +358,35 @@ hooks to be run before or after creating the replication controller.
 * Auto-scaling (requires cluster metrics)
 
       oc autoscale dc/httpd-ex --min=1 --max=5 --cpu-percent=80
+
+## Persistent Storage
+
+* List PVs
+
+      oc get pv
+
+* Describe PV
+
+      oc describe pv <pvname>
+
+* List PVCs
+
+      oc get pvc
+
+* Describe PVC
+
+      oc describe pvc <pvcname>
+
+* List a deployment config volume
+
+      oc volume dc/docker-registry
+
+Note: "empty directory" means ephemeral storage is used
+
+* Switch from ephemeral volume to PVC volume
+
+      oc volume dc/my-dc --add --name=my-persistent-storage \
+         -t pvc --claim-name=pvc00001 --overwrite
 
 ## Exposing a service outside the project
 
