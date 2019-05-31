@@ -226,6 +226,11 @@ Web Access
        oc status
        oc describe all
 
+
+### Perform the following steps only on the *MASTER* node
+
+### Perform the following steps as the **ROOT** user
+
 1. Add the following to `/etc/sysconfig/iptables` so you can run NFS from the master for PVs
 
        -A OS_FIREWALL_ALLOW -p tcp -m state --state NEW -m tcp --dport 111 -j ACCEPT
@@ -240,11 +245,12 @@ Web Access
        chown -R nfsnobody:nfsnobody /home/data
        chmod 700 /home/data/persistent*
        cat <<EOF >/etc/exports.d/dbvol.exports
-       /home/data/persistent01 *(rw,async,all_squash)
-       /home/data/persistent02 *(rw,async,all_squash)
-       /home/data/persistent03 *(rw,async,all_squash)
-       /home/data/persistent04 *(rw,async,all_squash)
-       /home/data/persistent05 *(rw,async,all_squash)
+       /home/data/persistent1 *(rw,async,all_squash)
+       /home/data/persistent2 *(rw,async,all_squash)
+       /home/data/persistent3 *(rw,async,all_squash)
+       /home/data/persistent4 *(rw,async,all_squash)
+       /home/data/persistent5 *(rw,async,all_squash)
+       /home/data/persistentetcd *(rw,async,all_squash)
        EOF
        setsebool -P virt_use_nfs 1
        systemctl enable nfs
