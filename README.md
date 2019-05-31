@@ -104,7 +104,7 @@ Web Access
 
        yum -y group install core base
        yum -y install centos-release-openshift-origin311 git iptables-services epel-release pyOpenSSL
-       yum -y install dkms kernel-devel ansible
+       yum -y install dkms kernel-devel
        # (using the VirtualBox menu: Devices, Insert Guest Additions CD Image)
        mount /dev/cdrom /mnt
        /mnt/VBoxLinuxAdditions.run
