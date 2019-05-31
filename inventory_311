@@ -1,0 +1,46 @@
+[OSEv3:children]
+masters
+nodes
+etcd
+
+[OSEv3:vars]
+ansible_ssh_user=rob.brucks
+ansible_become=true
+os_firewall_use_firewalld=False
+openshift_deployment_type=origin
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'}]
+openshift_pkg_version='-3.11.0'
+openshift_master_default_subdomain=apps.okd.example.com
+openshift_disable_check=memory_availability,disk_availability
+retry_files_enabled=False
+retry_files_save_path="~/"
+openshift_public_ip=192.168.10.10
+BindAddress=192.168.10.10
+
+#### Metrics
+# openshift_metrics_install_metrics=True
+# openshift_metrics_hawkular_hostname=hawkular-metrics.apps.okd.example.com
+# openshift_metrics_cassandra_storage_type=pv
+# openshift_metrics_hawkular_limits_cpu=200m
+# openshift_metrics_hawkular_requests_cpu=200m
+# openshift_metrics_hawkular_requests_memory=1Gi
+# openshift_metrics_cassandra_limits_memory=1Gi
+# openshift_metrics_cassandra_limits_cpu=100m
+# openshift_metrics_cassandra_storage_type=pv
+# openshift_metrics_heapster_limits_memory=1Gi
+# openshift_metrics_heapster_requests_memory=1Gi
+# openshift_metrics_hawkular_nodeselector={"region":"infra"}
+# openshift_metrics_heapster_nodeselector={"region":"infra"}
+# openshift_metrics_cassandra_nodeselector={"region":"infra"}
+# openshift_metrics_image_version=v3.11
+
+[masters]
+master.example.com
+
+[nodes]
+master.example.com openshift_ip=192.168.10.10 openshift_node_group_name='node-config-master'
+infra.example.com openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_ip=192.168.10.11 openshift_node_group_name='node-config-infra'
+compute.example.com openshift_node_labels="{'region': 'primary', 'zone': 'east'}" openshift_ip=192.168.10.12 openshift_node_group_name='node-config-compute'
+
+[etcd]
+master.example.com
