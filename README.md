@@ -266,3 +266,13 @@ Web Access
        showmount -e
 
 
+## Install Hawkular Metrics
+
+1. Un-comment the metrics settings in the inventory
+
+1. Run the ansible playbook to install the metrics
+
+       ansible-playbook -i ./inventory \
+         /usr/share/ansible/openshift-ansible/playbooks/openshift-metrics/config.yml
+
+
