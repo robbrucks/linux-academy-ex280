@@ -185,4 +185,30 @@ Web Access
        oc status
        oc describe all
 
+1. Add the following to `/etc/sysconfig/iptables` so you can run NFS from the master for PVs
+
+       -A OS_FIREWALL_ALLOW -p tcp -m state --state NEW -m tcp --dport 111 -j ACCEPT
+       -A OS_FIREWALL_ALLOW -p udp -m state --state NEW -m udp --dport 111 -j ACCEPT
+       -A OS_FIREWALL_ALLOW -p tcp -m state --state NEW -m tcp --dport 2049 -j ACCEPT
+       -A OS_FIREWALL_ALLOW -p udp -m state --state NEW -m udp --dport 2049 -j ACCEPT
+
+1. Install NFS
+
+       yum -y install nfs-utils
+       mkdir -p /home/data/persistent{1,2,3,4,5,etcd}
+       chown -R nfsnobody:nfsnobody /home/data
+       chmod 700 /home/data/persistent*
+       cat <<EOF >/etc/exports.d/dbvol.exports
+       /home/data/persistent01 *(rw,async,all_squash)
+       /home/data/persistent02 *(rw,async,all_squash)
+       /home/data/persistent03 *(rw,async,all_squash)
+       /home/data/persistent04 *(rw,async,all_squash)
+       /home/data/persistent05 *(rw,async,all_squash)
+       EOF
+       setsebool -P virt_use_nfs 1
+       systemctl enable nfs
+       exportfs -a
+       reboot
+       showmount -e
+
 

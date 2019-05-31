@@ -17,6 +17,23 @@ retry_files_save_path="~/"
 openshift_public_ip=192.168.10.10
 BindAddress=192.168.10.10
 
+# metrics
+openshift_metrics_install_metrics=True
+openshift_metrics_hawkular_hostname=hawkular-metrics.apps.okd.example.com
+openshift_metrics_cassandra_storage_type=pv
+openshift_metrics_hawkular_limits_cpu=200m
+openshift_metrics_hawkular_requests_cpu=200m
+openshift_metrics_hawkular_requests_memory=1Gi
+openshift_metrics_cassandra_limits_memory=1Gi
+openshift_metrics_cassandra_limits_cpu=100m
+openshift_metrics_cassandra_storage_type=pv
+openshift_metrics_heapster_limits_memory=1Gi
+openshift_metrics_heapster_requests_memory=1Gi
+openshift_metrics_hawkular_nodeselector={"region":"infra"}
+openshift_metrics_heapster_nodeselector={"region":"infra"}
+openshift_metrics_cassandra_nodeselector={"region":"infra"}
+openshift_metrics_image_version=v3.9
+
 [masters]
 master.example.com
 
