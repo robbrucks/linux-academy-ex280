@@ -83,50 +83,6 @@ Web Access
 
        yum -y update && reboot
 
-1. Set up all ancillary packages
-
-       yum -y group install core base
-       yum -y install centos-release-openshift-origin39 git iptables-services epel-release pyOpenSSL
-       yum -y install dkms kernel-devel
-       # (using the VirtualBox menu: Devices, Insert Guest Additions CD Image)
-       mount /dev/cdrom /mnt
-       /mnt/VBoxLinuxAdditions.run
-       umount /mnt && eject cdrom
-       yum-config-manager --disable epel
-       yum -y install https://cbs.centos.org/kojifiles/packages/ansible/2.4.3.0/1.el7/noarch/ansible-2.4.3.0-1.el7.noarch.rpm
-
-1. Copy the `dnsmasq_lab.conf` file from this repo to `/etc/dnsmasq.d/dnsmasq_lab.conf`
-
-1. Set up DNSMASQ as the DNS
-
-       cat <<EOF >> /etc/hosts
-       192.168.10.10 master.example.com  master
-       192.168.10.11 infra.example.com   infra
-       192.168.10.12 compute.example.com compute
-       EOF
-       cp /etc/resolv.conf /etc/resolv.conf.orig
-       cp /etc/resolv.conf /etc/resolv.dnsmasq
-       echo -e 'search example.com\nnameserver 127.0.0.1' > /etc/resolv.conf
-       systemctl enable --now dnsmasq.service
-
-1. Test DNSMASQ
- 
-       host `hostname`
-       host www.google.com
-
-1. Install Docker
-
-       yum -y install docker-1.13.1
-
-1. Set up Thin Pool provisioning
-
-       echo -e 'DEVS=/dev/sdb\nVG=docker-vg' > /etc/sysconfig/docker-storage-setup
-       docker-storage-setup
-      
-1. Enable and start docker
-
-       systemctl enable --now docker
-
 1. Change /etc/sudoers to use NOPASSWD for wheel group
 
        visudo
@@ -144,6 +100,86 @@ Web Access
        useradd -G wheel <userid>
        passwd <userid>
 
+1. Set up all ancillary packages
+
+       yum -y group install core base
+       yum -y install centos-release-openshift-origin39 git iptables-services epel-release pyOpenSSL
+       yum -y install dkms kernel-devel
+       # (using the VirtualBox menu: Devices, Insert Guest Additions CD Image)
+       mount /dev/cdrom /mnt
+       /mnt/VBoxLinuxAdditions.run
+       umount /mnt && eject cdrom
+       yum-config-manager --disable epel
+       yum -y install https://cbs.centos.org/kojifiles/packages/ansible/2.4.3.0/1.el7/noarch/ansible-2.4.3.0-1.el7.noarch.rpm
+
+1. Disable firewalld
+
+       systemctl disable --now firewalld.service
+
+1. Copy the `dnsmasq_lab.conf` file from this repo to `/etc/dnsmasq.d/dnsmasq_lab.conf`
+
+1. Set up DNSMASQ as the DNS
+
+       cat <<EOF >> /etc/hosts
+       192.168.10.10 master.example.com  master
+       192.168.10.11 infra.example.com   infra
+       192.168.10.12 compute.example.com compute
+       EOF
+       cp /etc/resolv.conf /etc/resolv.conf.orig
+       cp /etc/resolv.conf /etc/resolv.dnsmasq
+       echo -e 'search example.com\nnameserver 127.0.0.1' > /etc/resolv.conf
+       systemctl enable --now dnsmasq.service
+
+1. Stop NetworkManager from changing resolv.conf
+
+       sed -i '/^\[main\]/a dns=none' /etc/NetworkManager/NetworkManager.conf
+       systemctl restart NetworkManager.service
+
+1. Test DNSMASQ
+ 
+       host `hostname`
+       host www.google.com
+
+1. Install Docker
+
+       yum -y install docker-1.13.1
+
+1. Verify `/dev/sdb` exists and has no partitions
+
+       lsblk
+
+1. Configure docker storage
+
+ * Using overlay2
+
+       cat <<EOF > /etc/sysconfig/docker-storage-setup
+       DEVS='/dev/sdb'
+       VG=docker-vg
+       DATA_SIZE=95%VG
+       STORAGE_DRIVER=overlay2
+       CONTAINER_ROOT_LV_NAME=docker-lv
+       CONTAINER_ROOT_LV_MOUNT_PATH=/var/lib/docker
+       CONTAINER_ROOT_LV_SIZE=100%FREE
+       EOF
+       docker-storage-setup
+
+ * Using thinpool
+
+       cat <<EOF > /etc/sysconfig/docker-storage-setup
+       DEVS='/dev/sdb'
+       VG=docker-vg
+       EOF
+       docker-storage-setup
+
+1. Verify Docker storage is set
+
+       vgs
+       lvs
+
+1. Enable and start docker
+
+       systemctl enable --now docker
+
 
 ## INSTALL OPENSHIFT
 
@@ -155,6 +191,8 @@ Web Access
 
 1. Set up shared SSH keys 
 
+       ssh infra.example.com "mkdir ~/.ssh;chmod 700 ~/.ssh"
+       ssh compute.example.com "mkdir ~/.ssh;chmod 700 ~/.ssh"
        ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ''
        cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
        echo 'StrictHostKeyChecking=no' > ~/.ssh/config
