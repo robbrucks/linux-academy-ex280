@@ -38,13 +38,12 @@ All VMs are the following:
   * NIC1: Host-Only Network 192.168.10.0/24 (NO Gateway)
   * NIC2: NAT network
 * Disk1
-  * 30gb
+  * 13gb
   * /dev/sda
-    * 20gb / (root)
+    * 10gb / (root)
     * 3gb swap
-    * 7gb free
 * Disk2
-  * 15gb
+  * 20gb
   * /dev/sdb
   * UN-allocated
   * will be provisioned later as docker-vg thin pool

@@ -44,6 +44,26 @@
 
 # Managing Users
 
+* List all users
+
+       oc get user
+
+* List all identities
+
+       oc get identity
+
+* List all groups
+
+       oc get groups
+
+* List all service accounts
+
+       oc get sa
+
+* Create a new group
+
+       oc adm groups new <group_name> <user1> <user2>
+
 * Add user using htpasswd
 
        htpasswd -b /etc/origin/master/htpasswd rob.brucks mypassword
@@ -88,6 +108,11 @@
 * Revoke project admin from user
 
        oc adm policy remove-role-from-user admin rob.brucks -n mynamespace
+
+* See all users that can perform an action
+
+       oc adm policy who-can get pods
+       oc adm policy who-can admin cluster
 
 ## Role Based Access Control (RBAC)
 
@@ -420,5 +445,25 @@ Note: "empty directory" means ephemeral storage is used
 * Re-schedule a node
 
       oc adm manage-node <nodename> --schedulable=true
+
+* Monitor thin pool (better way?)
+
+      journalctl -u dm-event.service -n10
+      docker system df -v
+      docker info
+      vgs
+      docker volume ls
+      docker volume ls -f dangling=true
+      for i in $(docker ps -q);do
+        echo "Container $i"
+        docker inspect -f '{{ json .Mounts }}' $i | python -m json.tool
+        echo "-------------------"
+      done
+
+* Reclaim thin pool
+
+      docker volume prune
+      docker container prune
+      
 
 
