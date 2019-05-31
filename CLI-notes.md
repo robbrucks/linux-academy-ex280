@@ -454,6 +454,7 @@ Note: "empty directory" means ephemeral storage is used
       vgs
       docker volume ls
       docker volume ls -f dangling=true
+      docker inspect <volid>
       for i in $(docker ps -q);do
         echo "Container $i"
         docker inspect -f '{{ json .Mounts }}' $i | python -m json.tool
@@ -465,5 +466,3 @@ Note: "empty directory" means ephemeral storage is used
       docker volume prune
       docker container prune
       
-
-
