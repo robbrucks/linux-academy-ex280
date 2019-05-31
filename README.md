@@ -103,13 +103,14 @@ Web Access
 1. Set up all ancillary packages
 
        yum -y group install core base
-       yum -y install centos-release-openshift-origin311 git iptables-services epel-release pyOpenSSL ansible
-       yum -y install dkms kernel-devel
+       yum -y install centos-release-openshift-origin311 git iptables-services epel-release pyOpenSSL
+       yum -y install dkms kernel-devel ansible
        # (using the VirtualBox menu: Devices, Insert Guest Additions CD Image)
        mount /dev/cdrom /mnt
        /mnt/VBoxLinuxAdditions.run
        umount /mnt && eject cdrom
        yum-config-manager --disable epel
+       yum -y install ansible openshift-ansible
 
 1. Disable firewalld
 
@@ -203,10 +204,6 @@ Web Access
        chmod 600 ~/.ssh/config
        scp ~/.ssh/* infra.example.com:~/.ssh
        scp ~/.ssh/* compute.example.com:~/.ssh
-
-1. Install openshift-ansible
-
-       sudo yum -y install openshift-ansible
 
 1. Copy the `inventory` file from this repo to the non-root user's home directory
 
