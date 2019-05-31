@@ -103,31 +103,35 @@ Web Access
 1. Set up all ancillary packages
 
        yum -y group install core base
-       yum -y install centos-release-openshift-origin39 git iptables-services epel-release pyOpenSSL
+       yum -y install centos-release-openshift-origin311 git iptables-services epel-release pyOpenSSL ansible
        yum -y install dkms kernel-devel
        # (using the VirtualBox menu: Devices, Insert Guest Additions CD Image)
        mount /dev/cdrom /mnt
        /mnt/VBoxLinuxAdditions.run
        umount /mnt && eject cdrom
        yum-config-manager --disable epel
-       yum -y install https://cbs.centos.org/kojifiles/packages/ansible/2.4.3.0/1.el7/noarch/ansible-2.4.3.0-1.el7.noarch.rpm
 
 1. Disable firewalld
 
        systemctl disable --now firewalld.service
 
-1. Copy the `dnsmasq_lab.conf` file from this repo to `/etc/dnsmasq.d/dnsmasq_lab.conf`
-
 1. Set up DNSMASQ as the DNS
 
-       cat <<EOF >> /etc/hosts
-       192.168.10.10 master.example.com  master
-       192.168.10.11 infra.example.com   infra
-       192.168.10.12 compute.example.com compute
-       EOF
        cp /etc/resolv.conf /etc/resolv.conf.orig
        cp /etc/resolv.conf /etc/resolv.dnsmasq
        echo -e 'search example.com\nnameserver 127.0.0.1' > /etc/resolv.conf
+       cat <<EOF > /etc/dnsmasq.d/dnsmasq_lab.conf
+       resolv-file=/etc/resolv.dnsmasq
+       address=/master.example.com/192.168.10.10
+       address=/infra.example.com/192.168.10.11
+       address=/compute.example.com/192.168.10.12
+       address=/apps.okd.example.com/192.168.10.11
+       EOF
+       cat <<EOF2 >> /etc/hosts
+       192.168.10.10	master.example.com	master
+       192.168.10.11	infra.example.com	infra
+       192.168.10.12	compute.example.com	compute
+       EOF2
        systemctl enable --now dnsmasq.service
 
 1. Stop NetworkManager from changing resolv.conf
@@ -148,7 +152,7 @@ Web Access
 
        lsblk
 
-1. Configure docker storage
+1. Configure docker storage you prefer
 
  * Using overlay2
 
