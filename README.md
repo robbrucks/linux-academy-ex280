@@ -207,8 +207,15 @@ Web Access
        EOF
        setsebool -P virt_use_nfs 1
        systemctl enable nfs
-       exportfs -a
+
+
+1. Reboot to update iptables and start NFS
+
        reboot
+
+1. Validate that everything is working
+
+       exportfs -a
        showmount -e
 
 
