@@ -172,7 +172,9 @@ Web Access
 
        cat <<EOF > /etc/sysconfig/docker-storage-setup
        DEVS='/dev/sdb'
+       DATA_SIZE=99%VG
        VG=docker-vg
+       CONTAINER_THINPOOL=docker-lv
        EOF
        docker-storage-setup
 
