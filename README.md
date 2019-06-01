@@ -53,8 +53,6 @@ Web Access
 * OKD Master Console
   * https://master.example.com:8443
 
-
-
 ## SETUP
 
 ### PERFORM THE FOLLOWING ON YOUR OSX WORKSTATION
@@ -187,7 +185,6 @@ Web Access
 
        systemctl enable --now docker
 
-
 ## INSTALL OPENSHIFT
 
 ### Perform the following steps only on the *MASTER* node
@@ -226,12 +223,11 @@ Web Access
        oc status
        oc describe all
 
-
 ### Perform the following steps only on the *MASTER* node
 
 ### Perform the following steps as the **ROOT** user
 
-1. Add the following to `/etc/sysconfig/iptables` so you can run NFS from the master for PVs
+1. Modify the saved iptables only, since the running iptables is controlled by OKD
 
        sed -i '/^COMMIT/i -A OS_FIREWALL_ALLOW -p tcp -m state --state NEW -m tcp --dport 111 -j ACCEPT' /etc/sysconfig/iptables
        sed -i '/^COMMIT/i -A OS_FIREWALL_ALLOW -p udp -m state --state NEW -m udp --dport 111 -j ACCEPT' /etc/sysconfig/iptables
@@ -255,7 +251,6 @@ Web Access
        setsebool -P virt_use_nfs 1
        systemctl enable nfs
 
-
 1. Reboot to update iptables and start NFS
 
        reboot
@@ -264,7 +259,6 @@ Web Access
 
        exportfs -a
        showmount -e
-
 
 ## Installing Hawkular Metrics
 
