@@ -233,10 +233,10 @@ Web Access
 
 1. Add the following to `/etc/sysconfig/iptables` so you can run NFS from the master for PVs
 
-       sed -i /etc/sysconfig/iptables '/^COMMIT/i -A OS_FIREWALL_ALLOW -p tcp -m state --state NEW -m tcp --dport 111 -j ACCEPT'
-       sed -i /etc/sysconfig/iptables '/^COMMIT/i -A OS_FIREWALL_ALLOW -p udp -m state --state NEW -m udp --dport 111 -j ACCEPT'
-       sed -i /etc/sysconfig/iptables '/^COMMIT/i -A OS_FIREWALL_ALLOW -p tcp -m state --state NEW -m tcp --dport 2049 -j ACCEPT'
-       sed -i /etc/sysconfig/iptables '/^COMMIT/i -A OS_FIREWALL_ALLOW -p udp -m state --state NEW -m udp --dport 2049 -j ACCEPT'
+       sed -i '/^COMMIT/i -A OS_FIREWALL_ALLOW -p tcp -m state --state NEW -m tcp --dport 111 -j ACCEPT' /etc/sysconfig/iptables
+       sed -i '/^COMMIT/i -A OS_FIREWALL_ALLOW -p udp -m state --state NEW -m udp --dport 111 -j ACCEPT' /etc/sysconfig/iptables
+       sed -i '/^COMMIT/i -A OS_FIREWALL_ALLOW -p tcp -m state --state NEW -m tcp --dport 2049 -j ACCEPT' /etc/sysconfig/iptables
+       sed -i '/^COMMIT/i -A OS_FIREWALL_ALLOW -p udp -m state --state NEW -m udp --dport 2049 -j ACCEPT' /etc/sysconfig/iptables
 
 1. Install NFS
 
