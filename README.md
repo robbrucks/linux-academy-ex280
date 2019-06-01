@@ -233,10 +233,10 @@ Web Access
 
 1. Add the following to `/etc/sysconfig/iptables` so you can run NFS from the master for PVs
 
-       -A OS_FIREWALL_ALLOW -p tcp -m state --state NEW -m tcp --dport 111 -j ACCEPT
-       -A OS_FIREWALL_ALLOW -p udp -m state --state NEW -m udp --dport 111 -j ACCEPT
-       -A OS_FIREWALL_ALLOW -p tcp -m state --state NEW -m tcp --dport 2049 -j ACCEPT
-       -A OS_FIREWALL_ALLOW -p udp -m state --state NEW -m udp --dport 2049 -j ACCEPT
+       sed -i /etc/sysconfig/iptables '/^COMMIT/i -A OS_FIREWALL_ALLOW -p tcp -m state --state NEW -m tcp --dport 111 -j ACCEPT'
+       sed -i /etc/sysconfig/iptables '/^COMMIT/i -A OS_FIREWALL_ALLOW -p udp -m state --state NEW -m udp --dport 111 -j ACCEPT'
+       sed -i /etc/sysconfig/iptables '/^COMMIT/i -A OS_FIREWALL_ALLOW -p tcp -m state --state NEW -m tcp --dport 2049 -j ACCEPT'
+       sed -i /etc/sysconfig/iptables '/^COMMIT/i -A OS_FIREWALL_ALLOW -p udp -m state --state NEW -m udp --dport 2049 -j ACCEPT'
 
 1. Install NFS
 
@@ -277,7 +277,6 @@ Web Access
        ansible-playbook -i ./inventory \
          /usr/share/ansible/openshift-ansible/playbooks/openshift-metrics/config.yml
 
-*It will take quite a while for the metrics system to build the cassandra DB and start up. Be patient.*
-
+*It will take quite a while for the metrics system to build the cassandra DB and start up. Mine took 15 minutes. Be patient.*
 
 
