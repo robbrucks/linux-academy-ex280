@@ -266,9 +266,9 @@ Web Access
        showmount -e
 
 
-## Install Hawkular Metrics
+## Installing Hawkular Metrics
 
-### You will need to increase virtual RAM on infra.example.com VM to 6gb for this to work
+### You will need to increase virtual RAM on the infra.example.com VM to 6gb for this to work
 
 1. Un-comment the metrics settings in the inventory
 
@@ -276,5 +276,8 @@ Web Access
 
        ansible-playbook -i ./inventory \
          /usr/share/ansible/openshift-ansible/playbooks/openshift-metrics/config.yml
+
+*It will take quite a while for the metrics system to build the cassandra DB and start up. Be patient.*
+
 
 
