@@ -466,3 +466,7 @@ Note: "empty directory" means ephemeral storage is used
       docker volume prune
       docker container prune
       
+* Run Cluster Disagnostics
+
+      oc adm diagnostics
+

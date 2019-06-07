@@ -1,0 +1,22 @@
+ * Using overlay2
+
+       cat <<EOF > /etc/sysconfig/docker-storage-setup
+       DEVS='/dev/sdb'
+       VG=docker-vg
+       STORAGE_DRIVER=overlay2
+       CONTAINER_ROOT_LV_NAME=docker-lv
+       CONTAINER_ROOT_LV_MOUNT_PATH=/var/lib/docker
+       CONTAINER_ROOT_LV_SIZE=100%FREE
+       EOF
+       docker-storage-setup
+
+ * Using devicemapper
+
+       cat <<EOF > /etc/sysconfig/docker-storage-setup
+       DEVS='/dev/sdb'
+       DATA_SIZE=99%VG
+       VG=docker-vg
+       CONTAINER_THINPOOL=docker-lv
+       EOF
+       docker-storage-setup
+

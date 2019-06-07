@@ -46,7 +46,7 @@ All VMs are the following:
   * 20gb
   * /dev/sdb
   * UN-allocated
-  * will be provisioned later as docker-vg thin pool
+  * will be provisioned later as vg\_docker thin pool
 
 
 Web Access
@@ -157,10 +157,10 @@ Web Access
 
        cat <<EOF > /etc/sysconfig/docker-storage-setup
        DEVS='/dev/sdb'
-       VG=docker-vg
+       VG=vg_docker
        DATA_SIZE=95%VG
        STORAGE_DRIVER=overlay2
-       CONTAINER_ROOT_LV_NAME=docker-lv
+       CONTAINER_ROOT_LV_NAME=lv_docker
        CONTAINER_ROOT_LV_MOUNT_PATH=/var/lib/docker
        CONTAINER_ROOT_LV_SIZE=100%FREE
        EOF
@@ -171,8 +171,8 @@ Web Access
        cat <<EOF > /etc/sysconfig/docker-storage-setup
        DEVS='/dev/sdb'
        DATA_SIZE=99%VG
-       VG=docker-vg
-       CONTAINER_THINPOOL=docker-lv
+       VG=vg_docker
+       CONTAINER_THINPOOL=lv_docker
        EOF
        docker-storage-setup
 
