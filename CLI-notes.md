@@ -70,7 +70,7 @@
 
 * Grant cluster admin privilege
 
-       oc adm policy add-cluster-role-to-user cluster-admin rob.brucks
+      oc adm policy add-cluster-role-to-user cluster-admin rob.brucks
 
 * Revoke cluster admin privilege
 
