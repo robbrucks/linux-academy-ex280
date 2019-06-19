@@ -46,27 +46,27 @@
 
 * List all users
 
-       oc get user
+      oc get user
 
 * List all identities
 
-       oc get identity
+      oc get identity
 
 * List all groups
 
-       oc get groups
+      oc get groups
 
 * List all service accounts
 
-       oc get sa
+      oc get sa
 
 * Create a new group
 
-       oc adm groups new <group_name> <user1> <user2>
+      oc adm groups new <group_name> <user1> <user2>
 
 * Add user using htpasswd
 
-       htpasswd -b /etc/origin/master/htpasswd rob.brucks mypassword
+      htpasswd -b /etc/origin/master/htpasswd rob.brucks mypassword
 
 * Grant cluster admin privilege
 
@@ -74,45 +74,45 @@
 
 * Revoke cluster admin privilege
 
-       oc adm policy remove-cluster-role-from-user cluster-admin rob.brucks
+      oc adm policy remove-cluster-role-from-user cluster-admin rob.brucks
 
 * See available cluster-level roles
 
-       oc get clusterroles
+      oc get clusterroles
 
 * List all role bindings in a project
 
-       oc get rolebindings
+      oc get rolebindings
 
 * List all role bindings for the cluster
 
-       oc get clusterrolebindings
+      oc get clusterrolebindings
 
 * Remove roles from groups
 
-       oc adm policy remove-cluster-role-from-group self-provisioner \
-          system:authenticated system:authenticated:oauth
+      oc adm policy remove-cluster-role-from-group self-provisioner \
+         system:authenticated system:authenticated:oauth
 
 * Grant role
 
-       oc adm policy add-role-to-user edit rob.brucks -n mynamespace
+      oc adm policy add-role-to-user edit rob.brucks -n mynamespace
 
 * Revoke role
 
-       oc adm policy remove-role-from-user edit rob.brucks -n mynamespace
+      oc adm policy remove-role-from-user edit rob.brucks -n mynamespace
 
 * Grant project admin to user
 
-       oc adm policy add-role-to-user admin rob.brucks -n mynamespace
+      oc adm policy add-role-to-user admin rob.brucks -n mynamespace
 
 * Revoke project admin from user
 
-       oc adm policy remove-role-from-user admin rob.brucks -n mynamespace
+      oc adm policy remove-role-from-user admin rob.brucks -n mynamespace
 
 * See all users that can perform an action
 
-       oc adm policy who-can get pods
-       oc adm policy who-can admin cluster
+      oc adm policy who-can get pods
+      oc adm policy who-can admin cluster
 
 ## Role Based Access Control (RBAC)
 
@@ -143,23 +143,23 @@ Commonly Used Roles | Description
 
 * Create a new project
 
-       oc new-project linuxacademy --description="ex280 class project"
+      oc new-project linuxacademy --description="ex280 class project"
 
 * Delete a project
 
-       oc delete project linuxacademy
+      oc delete project linuxacademy
 
 * Get project overview info
 
-       oc status
+      oc status
 
 * List all projects
 
-       oc projects
+      oc projects
 
 * Switch to another project
 
-       oc project <project>
+      oc project <project>
 
 
 # Resource Quotas
@@ -172,42 +172,42 @@ storage that may be consumed by resources in that project.
 
 * List quotas
 
-       oc get quota
-       oc describe quota <quota>
+      oc get quota
+      oc describe quota <quota>
 
 * Create Quota for Object Counts
 
-       apiVersion: v1
-       kind: ResourceQuota
-       metadata:
-         name: core-object-counts
-       spec:
-         hard:
-           configmaps: "10" 
-           persistentvolumeclaims: "4" 
-           replicationcontrollers: "20" 
-           secrets: "10" 
-           services: "10" 
+      apiVersion: v1
+      kind: ResourceQuota
+      metadata:
+        name: core-object-counts
+      spec:
+        hard:
+          configmaps: "10" 
+          persistentvolumeclaims: "4" 
+          replicationcontrollers: "20" 
+          secrets: "10" 
+          services: "10" 
 
 * Create Quota for Resources
 
-       apiVersion: v1
-       kind: ResourceQuota
-       metadata:
-         name: compute-resources
-       spec:
-         hard:
-           pods: "4" 
-           requests.cpu: "1" 
-           requests.memory: 1Gi 
-           requests.ephemeral-storage: 2Gi 
-           limits.cpu: "2" 
-           limits.memory: 2Gi 
-           limits.ephemeral-storage: 4Gi 
+      apiVersion: v1
+      kind: ResourceQuota
+      metadata:
+        name: compute-resources
+      spec:
+        hard:
+          pods: "4" 
+          requests.cpu: "1" 
+          requests.memory: 1Gi 
+          requests.ephemeral-storage: 2Gi 
+          limits.cpu: "2" 
+          limits.memory: 2Gi 
+          limits.ephemeral-storage: 4Gi 
 
 * Creating quotas from yaml files
 
-       oc create -f <filename.yml> -n <namespace>
+      oc create -f <filename.yml> -n <namespace>
 
 # Limit Ranges
 
@@ -219,39 +219,39 @@ or persistent volume claim can consume.
 
 * List Limit Ranges
 
-       oc get limitrange
-       oc describe limitrange <quota>
+      oc get limitrange
+      oc describe limitrange <quota>
 
 * Core Limit Range
 
-       apiVersion: "v1"
-       kind: "LimitRange"
-       metadata:
-         name: "core-resource-limits" 
-       spec:
-         limits:
-           - type: "Pod"
-             max:
-               cpu: "2" 
-               memory: "1Gi" 
-             min:
-               cpu: "200m" 
-               memory: "6Mi" 
-           - type: "Container"
-             max:
-               cpu: "2" 
-               memory: "1Gi" 
-             min:
-               cpu: "100m" 
-               memory: "4Mi" 
-             default:
-               cpu: "300m" 
-               memory: "200Mi" 
-             defaultRequest:
-               cpu: "200m" 
-               memory: "100Mi" 
-             maxLimitRequestRatio:
-               cpu: "10" 
+      apiVersion: "v1"
+      kind: "LimitRange"
+      metadata:
+        name: "core-resource-limits" 
+      spec:
+        limits:
+          - type: "Pod"
+            max:
+              cpu: "2" 
+              memory: "1Gi" 
+            min:
+              cpu: "200m" 
+              memory: "6Mi" 
+          - type: "Container"
+            max:
+              cpu: "2" 
+              memory: "1Gi" 
+            min:
+              cpu: "100m" 
+              memory: "4Mi" 
+            default:
+              cpu: "300m" 
+              memory: "200Mi" 
+            defaultRequest:
+              cpu: "200m" 
+              memory: "100Mi" 
+            maxLimitRequestRatio:
+              cpu: "10" 
 
 # Creating Openshift Apps
 
