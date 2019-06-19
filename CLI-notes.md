@@ -35,7 +35,7 @@
       oc edit <objecttype> <object>
 
 * Delete an object
-   
+
       oc delete <objecttype> <object>
 
 * Return session information
@@ -120,7 +120,7 @@
 
 Roles and bindings that are applicable across all projects. Roles that exist cluster-wide are considered cluster roles. Cluster role
 bindings can only reference cluster roles.
-  
+
 ### Local RBAC
 
 Roles and bindings that are scoped to a given project. Roles that exist only in a project are considered local roles. Local role
@@ -183,11 +183,11 @@ storage that may be consumed by resources in that project.
         name: core-object-counts
       spec:
         hard:
-          configmaps: "10" 
-          persistentvolumeclaims: "4" 
-          replicationcontrollers: "20" 
-          secrets: "10" 
-          services: "10" 
+          configmaps: "10"
+          persistentvolumeclaims: "4"
+          replicationcontrollers: "20"
+          secrets: "10"
+          services: "10"
 
 * Create Quota for Resources
 
@@ -197,13 +197,13 @@ storage that may be consumed by resources in that project.
         name: compute-resources
       spec:
         hard:
-          pods: "4" 
-          requests.cpu: "1" 
-          requests.memory: 1Gi 
-          requests.ephemeral-storage: 2Gi 
-          limits.cpu: "2" 
-          limits.memory: 2Gi 
-          limits.ephemeral-storage: 4Gi 
+          pods: "4"
+          requests.cpu: "1"
+          requests.memory: 1Gi
+          requests.ephemeral-storage: 2Gi
+          limits.cpu: "2"
+          limits.memory: 2Gi
+          limits.ephemeral-storage: 4Gi
 
 * Creating quotas from yaml files
 
@@ -227,31 +227,31 @@ or persistent volume claim can consume.
       apiVersion: "v1"
       kind: "LimitRange"
       metadata:
-        name: "core-resource-limits" 
+        name: "core-resource-limits"
       spec:
         limits:
           - type: "Pod"
             max:
-              cpu: "2" 
-              memory: "1Gi" 
+              cpu: "2"
+              memory: "1Gi"
             min:
-              cpu: "200m" 
-              memory: "6Mi" 
+              cpu: "200m"
+              memory: "6Mi"
           - type: "Container"
             max:
-              cpu: "2" 
-              memory: "1Gi" 
+              cpu: "2"
+              memory: "1Gi"
             min:
-              cpu: "100m" 
-              memory: "4Mi" 
+              cpu: "100m"
+              memory: "4Mi"
             default:
-              cpu: "300m" 
-              memory: "200Mi" 
+              cpu: "300m"
+              memory: "200Mi"
             defaultRequest:
-              cpu: "200m" 
-              memory: "100Mi" 
+              cpu: "200m"
+              memory: "100Mi"
             maxLimitRequestRatio:
-              cpu: "10" 
+              cpu: "10"
 
 # Creating Openshift Apps
 
@@ -375,7 +375,7 @@ hooks to be run before or after creating the replication controller.
 * Scaling down pods
 
       oc scale --replicas=1 dc/hello-openshift
-   
+
 * Scale an app to zero is perfectly valid
 
       oc scale --replicas=0 dc/hello-openshift
@@ -465,7 +465,7 @@ Note: "empty directory" means ephemeral storage is used
 
       docker volume prune
       docker container prune
-      
+
 * Run Cluster Disagnostics
 
       oc adm diagnostics
