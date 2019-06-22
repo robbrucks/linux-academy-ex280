@@ -275,7 +275,7 @@ Web Access
 
 ## Installing Kube Ops View (funkybox)
 
-Openshift version: https://github.com/raffaelespazzoli/kube-ops-view/tree/ocp
+Kube Ops for Openshift: https://github.com/raffaelespazzoli/kube-ops-view/tree/ocp
 
     oc new-project funkybox
     oc create sa kube-ops-view
