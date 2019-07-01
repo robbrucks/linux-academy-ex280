@@ -100,15 +100,34 @@ Web Access
 
 1. Set up all ancillary packages
 
+       # Install the standard server packages
        yum -y group install core base
-       yum -y install centos-release-openshift-origin311 git iptables-services epel-release pyOpenSSL
+
+       # Install support packages and Epel repo
+       yum -y install git iptables-services epel-release pyOpenSSL
+
+       # Install the openshift ansible *Repo*
+       yum -y install centos-release-openshift-origin311
+
+       # Install VirtualBox guest tools
        yum -y install dkms kernel-devel
        # (using the VirtualBox menu: Devices, Insert Guest Additions CD Image)
        mount /dev/cdrom /mnt
        /mnt/VBoxLinuxAdditions.run
        umount /mnt && eject cdrom
+
+       # Disable the Epel repo
        yum-config-manager --disable epel
-       yum -y install ansible openshift-ansible
+
+       # Install specific ansible version
+       yum -y install ansible-2.6.5
+
+       # Lock the ansible package from being upgraded
+       yum -y install yum-plugin-versionlock
+       yum versionlock ansible
+
+       # Install the openshift ansible playbooks
+       yum -y install openshift-ansible
 
 1. Disable firewalld
 
@@ -207,6 +226,10 @@ Web Access
 1. Copy the `inventory` file from this repo to the non-root user's home directory
 
 1. Edit the `inventory` file and replace `___YOUR_SSO___` with your non-root userid
+
+1. Check the openshift facts to ensure correctness
+
+       ansible-playbook -i ~/inventory /usr/share/ansible/openshift-ansible/playbooks/byo/openshift_facts.yml
 
 1. Pre-Check the Cluster
 
