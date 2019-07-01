@@ -106,9 +106,6 @@ Web Access
        # Install support packages and Epel repo
        yum -y install git iptables-services epel-release pyOpenSSL
 
-       # Install the openshift ansible *Repo*
-       yum -y install centos-release-openshift-origin311
-
        # Install VirtualBox guest tools
        yum -y install dkms kernel-devel
        # (using the VirtualBox menu: Devices, Insert Guest Additions CD Image)
@@ -120,11 +117,14 @@ Web Access
        yum-config-manager --disable epel
 
        # Install specific ansible version
-       yum -y install ansible-2.6.5
+       yum -y downgrade ansible-2.6.5
 
        # Lock the ansible package from being upgraded
        yum -y install yum-plugin-versionlock
        yum versionlock ansible
+
+       # Install the openshift ansible *Repo*
+       yum -y install centos-release-openshift-origin311
 
        # Install the openshift ansible playbooks
        yum -y install openshift-ansible
@@ -250,7 +250,7 @@ Web Access
 
 ### Perform the following steps as the **ROOT** user
 
-1. Modify the saved iptables only, since the running iptables is controlled by OKD
+1. Modify the saved iptables to allow nfs, since the running iptables is controlled by OKD
 
        sed -i '/^COMMIT/i -A OS_FIREWALL_ALLOW -p tcp -m state --state NEW -m tcp --dport 111 -j ACCEPT' /etc/sysconfig/iptables
        sed -i '/^COMMIT/i -A OS_FIREWALL_ALLOW -p udp -m state --state NEW -m udp --dport 111 -j ACCEPT' /etc/sysconfig/iptables
