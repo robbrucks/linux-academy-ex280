@@ -66,7 +66,7 @@
 
 * Add user using htpasswd
 
-      htpasswd -b /etc/origin/master/htpasswd rob.brucks mypassword
+      htpasswd -b /etc/origin/master/htpasswd rob.brucks 'mypassword'
 
 * Grant cluster admin privilege
 
