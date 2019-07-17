@@ -18,25 +18,42 @@ Host machine
 * VirtualBox
 
 
+Router VM to provide DNS, router services, and for running Ansible Playbooks
+* Hostname router.example.com
+* Centos 7.6.1810 64bit Minimal Install
+* 2 virtual CPUs
+* 1gb RAM
+* 8gb Disk
+* NIC 1
+  * Virtual Box Host-Only Network 192.168.10.0/24
+  * IP 192.168.10.2
+  * No Gateway
+  * No DNS
+* NIC 2
+  * Virtual Box NAT Network
+  * DHCP
+
+
 Openshift VMs:
 * Master Node
-  * master.example.com
+  * Hostname master.example.com
   * 192.168.10.10
 * Infrastructure Worker Node
-  * infra.example.com
+  * Hostname infra.example.com
   * 192.168.10.11
 * Compute Worker Node
-  * compute.example.com
+  * Hostname compute.example.com
   * 192.168.10.12
 
 
-All VMs are the following:
+All Openshift VMs are the following:
 * Centos 7.6.1810 64bit Minimal Install
 * 2 virtual CPUs
 * 4gb RAM
-* Networks (both networks on each VM)
-  * NIC1: Host-Only Network 192.168.10.0/24 (NO Gateway)
-  * NIC2: NAT network
+* Network
+  * Host-Only Network 192.168.10.0/24
+  * Gateway 192.168.10.2
+  * DNS 192.168.10.2
 * Disk1
   * 13gb
   * /dev/sda
@@ -63,9 +80,10 @@ Web Access
 
    * Add the following /etc/hosts entries:
 
-         192.168.10.10    master.example.com  master
-         192.168.10.11    infra.example.com   infra
-         192.168.10.12    compute.example.com compute
+         192.168.10.2 router.example.com router
+         192.168.10.10 master.example.com master
+         192.168.10.11 infra.example.com infra
+         192.168.10.12 compute.example.com compute
 
 1. Clear the local DNS cache
 
@@ -73,13 +91,11 @@ Web Access
 
 ### PERFORM THE FOLLOWING STEPS ON *ALL* VMs:
 
+* Set up the Router VM first so you have networking for the others
+
 1. Install CentOS
 
 1. Become the root user
-
-1. Update the kernel and reboot
-
-       yum -y update && reboot
 
 1. Change /etc/sudoers to use NOPASSWD for wheel group
 
@@ -97,6 +113,10 @@ Web Access
 
        useradd -G wheel <userid>
        passwd <userid>
+
+1. Update the kernel and reboot
+
+       yum -y update && reboot
 
 1. Set up all ancillary packages
 
@@ -123,36 +143,47 @@ Web Access
        yum -y install yum-plugin-versionlock
        yum versionlock ansible
 
-       # Install the openshift ansible *Repo*
-       yum -y install centos-release-openshift-origin311
 
-       # Install the openshift ansible playbooks
-       yum -y install openshift-ansible
+### ON THE ROUTER VM
 
-1. Disable firewalld
+1. Configure the kernel to allow forwarding as a router
 
-       systemctl disable --now firewalld.service
+       sysctl -w net.ipv4.ip_forward=1 > /etc/sysctl.d/ip_forward.conf
 
-1. Set up DNSMASQ as the DNS
+1. Configure firewalld as a router
+   * Assumptions
+     * enp0s8 is assumed to be the public interface connected to the WAN or external network
+     * 192.168.10.0/24 is assumed to be the private VM VLAN network
+
+           firewall-cmd --permanent --direct --passthrough ipv4 -t nat \
+              -I POSTROUTING -o enp0s8 -j MASQUERADE -s 192.168.10.0/24
+           firewall-cmd --change-interface=enp0s8 --zone=external --permanent
+           firewall-cmd --set-default-zone=internal
+           firewall-cmd --complete-reload
+           systemctl restart network && systemctl restart firewalld
+
+1. Set up DNSMASQ as the DNS server
 
        cp /etc/resolv.conf /etc/resolv.conf.orig
        cp /etc/resolv.conf /etc/resolv.dnsmasq
        echo -e 'search example.com\nnameserver 127.0.0.1' > /etc/resolv.conf
        cat <<EOF > /etc/dnsmasq.d/dnsmasq_lab.conf
        resolv-file=/etc/resolv.dnsmasq
+       address=/router.example.com/192.168.10.2
        address=/master.example.com/192.168.10.10
        address=/infra.example.com/192.168.10.11
        address=/compute.example.com/192.168.10.12
        address=/apps.okd.example.com/192.168.10.11
        EOF
        cat <<EOF2 >> /etc/hosts
-       192.168.10.10	master.example.com	master
-       192.168.10.11	infra.example.com	infra
-       192.168.10.12	compute.example.com	compute
+       192.168.10.2 router.example.com router
+       192.168.10.10 master.example.com master
+       192.168.10.11 infra.example.com infra
+       192.168.10.12 compute.example.com compute
        EOF2
        systemctl enable --now dnsmasq.service
 
-1. Stop NetworkManager from changing resolv.conf
+1. Stop NetworkManager from replacing resolv.conf
 
        sed -i '/^\[main\]/a dns=none' /etc/NetworkManager/NetworkManager.conf
        systemctl restart NetworkManager.service
@@ -161,6 +192,35 @@ Web Access
  
        host `hostname`
        host www.google.com
+
+1. Install the openshift 3.11 ansible repo
+
+       yum -y install centos-release-openshift-origin311
+
+1. Install openshift ansible playbooks
+
+       yum -y install openshift-ansible
+
+1. Install the openshift ansible 3.11 playbooks from github
+
+       mkdir ~/github
+       git clone https://github.com/openshift/openshift-ansible.git ~/github
+       cd ~/github/openshift-ansible
+       git checkout origin/release-3.11
+
+1. Install this repo
+
+       git clone git@github.com:robbrucks/linux-academy-ex280.git ~/github
+
+
+You can use either the github version of the `openshift-ansible` playbooks you cloned in your home directory, or the repo version
+installed in `/usr/share/ansible/openshift-ansible` on the router VM.
+
+### ON THE OPENSHIFT VMS
+
+1. Disable firewalld
+
+       systemctl disable --now firewalld.service
 
 1. Install Docker
 
@@ -196,30 +256,32 @@ Web Access
        docker-storage-setup
 
 1. Verify Docker storage is set
+   * **ONLY ON THE OPENSHIFT VMS**
 
        vgs
        lvs
 
 1. Enable and start docker
+   * **ONLY ON THE OPENSHIFT VMS**
 
        systemctl enable --now docker
 
 ## INSTALL OPENSHIFT
 
-### Perform the following steps only on the *MASTER* node
+### Perform the following steps on the Router VM as your NON-ROOT user.
 
-### Perform the following steps as the NON-ROOT user
-
-1. Login to the MASTER node as your local NON-ROOT USER
+1. Login to the ROUTER VM as your local NON-ROOT USER
 
 1. Set up shared SSH keys 
 
+       ssh master.example.com "mkdir ~/.ssh;chmod 700 ~/.ssh"
        ssh infra.example.com "mkdir ~/.ssh;chmod 700 ~/.ssh"
        ssh compute.example.com "mkdir ~/.ssh;chmod 700 ~/.ssh"
        ssh-keygen -t rsa -b 4096 -f ~/.ssh/id_rsa -N ''
        cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
        echo 'StrictHostKeyChecking=no' > ~/.ssh/config
        chmod 600 ~/.ssh/config
+       scp ~/.ssh/* master.example.com:~/.ssh
        scp ~/.ssh/* infra.example.com:~/.ssh
        scp ~/.ssh/* compute.example.com:~/.ssh
 
