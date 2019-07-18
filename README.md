@@ -188,6 +188,8 @@ Web Access
        192.168.10.12 compute.example.com compute
        EOF2
        systemctl enable --now dnsmasq.service
+       firewall-cmd --add-service=dns --perm
+       firewall-cmd --reload
 
 1. Stop NetworkManager from replacing resolv.conf
 
