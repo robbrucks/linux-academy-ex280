@@ -143,6 +143,15 @@ Web Access
        # Disable the Epel repo
        yum-config-manager --disable epel
 
+1. Update /etc/hosts on all VMs
+
+       cat <<EOF2 >> /etc/hosts
+       192.168.10.2 router.example.com router
+       192.168.10.10 master.example.com master
+       192.168.10.11 infra.example.com infra
+       192.168.10.12 compute.example.com compute
+       EOF2
+
 
 ### ON THE ROUTER VM
 
@@ -175,12 +184,6 @@ Web Access
        address=/compute.example.com/192.168.10.12
        address=/apps.okd.example.com/192.168.10.11
        EOF
-       cat <<EOF2 >> /etc/hosts
-       192.168.10.2 router.example.com router
-       192.168.10.10 master.example.com master
-       192.168.10.11 infra.example.com infra
-       192.168.10.12 compute.example.com compute
-       EOF2
        systemctl enable --now dnsmasq.service
        firewall-cmd --add-service=dns --perm --zone=internal
        firewall-cmd --reload
