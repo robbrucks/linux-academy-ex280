@@ -142,12 +142,11 @@ Web Access
        # Disable the Epel repo
        yum-config-manager --disable epel
 
-       # Install specific ansible version
-       yum -y downgrade ansible-2.6.5
+       # Install ansible version 2.6 repo
+       yum -y install centos-release-ansible26
 
-       # Lock the ansible package from being upgraded
-       yum -y install yum-plugin-versionlock
-       yum versionlock ansible
+       # Install ansible version 2.6.14
+       yum -y install ansible-2.6.14
 
 
 ### ON THE ROUTER VM
