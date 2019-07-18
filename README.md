@@ -16,6 +16,12 @@ Host machine
 * 16gb RAM
 * 256gb SSD
 * VirtualBox
+  * Host-Only Network as follows
+    * vboxnet0
+    * IPv4 192.168.10.1
+    * Mask 255.255.255.0 (equivalent to 192.168.10.1/24)
+    * IPv6 not set
+    * DHCP not enabled
 
 
 Router VM to provide DNS, router services, and for running Ansible Playbooks
@@ -25,7 +31,7 @@ Router VM to provide DNS, router services, and for running Ansible Playbooks
 * 1gb RAM
 * 8gb Disk
 * NIC 1
-  * Virtual Box Host-Only Network 192.168.10.0/24
+  * Virtual Box Host-Only Network 192.168.10.0/24 (vboxnet0)
   * IP 192.168.10.2
   * No Gateway
   * No DNS
@@ -37,13 +43,13 @@ Router VM to provide DNS, router services, and for running Ansible Playbooks
 Openshift VMs:
 * Master Node
   * Hostname master.example.com
-  * 192.168.10.10
+  * 192.168.10.10 (vboxnet0)
 * Infrastructure Worker Node
   * Hostname infra.example.com
-  * 192.168.10.11
+  * 192.168.10.11 (vboxnet0)
 * Compute Worker Node
   * Hostname compute.example.com
-  * 192.168.10.12
+  * 192.168.10.12 (vboxnet0)
 
 
 All Openshift VMs are the following:
@@ -51,7 +57,7 @@ All Openshift VMs are the following:
 * 2 virtual CPUs
 * 4gb RAM
 * Network
-  * Host-Only Network 192.168.10.0/24
+  * Host-Only Network 192.168.10.0/24 (vboxnet0)
   * Gateway 192.168.10.2
   * DNS 192.168.10.2
 * Disk1
