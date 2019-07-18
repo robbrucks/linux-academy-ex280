@@ -60,6 +60,7 @@ All Openshift VMs are the following:
   * Host-Only Network 192.168.10.0/24 (vboxnet0)
   * Gateway 192.168.10.2
   * DNS 192.168.10.2
+  * Search Domains: example.com
 * Disk1
   * 13gb
   * /dev/sda
