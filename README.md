@@ -270,13 +270,13 @@ installed in `/usr/share/ansible/openshift-ansible` on the router VM.
 1. Verify Docker storage is set
    * **ONLY ON THE OPENSHIFT VMS**
 
-       vgs
-       lvs
+         vgs
+         lvs
 
 1. Enable and start docker
    * **ONLY ON THE OPENSHIFT VMS**
 
-       systemctl enable --now docker
+         systemctl enable --now docker
 
 ## INSTALL OPENSHIFT
 
