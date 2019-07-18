@@ -143,12 +143,6 @@ Web Access
        # Disable the Epel repo
        yum-config-manager --disable epel
 
-       # Install ansible version 2.6 repo
-       yum -y install centos-release-ansible26
-
-       # Install ansible version 2.6.14
-       yum -y install ansible-2.6.14
-
 
 ### ON THE ROUTER VM
 
@@ -188,7 +182,7 @@ Web Access
        192.168.10.12 compute.example.com compute
        EOF2
        systemctl enable --now dnsmasq.service
-       firewall-cmd --add-service=dns --perm
+       firewall-cmd --add-service=dns --perm --zone=internal
        firewall-cmd --reload
 
 1. Stop NetworkManager from replacing resolv.conf
@@ -200,6 +194,14 @@ Web Access
  
        host `hostname`
        host www.google.com
+
+1. Install Ansible 2.6
+
+       # Install ansible version 2.6 repo
+       yum -y install centos-release-ansible26
+
+       # Install ansible version 2.6.14
+       yum -y install ansible-2.6.14
 
 1. Install the openshift 3.11 ansible repo
 
