@@ -9,28 +9,30 @@ ansible_become=true
 os_firewall_use_firewalld=False
 openshift_deployment_type=origin
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider'}]
-openshift_pkg_version='-3.11.0'
+# openshift_pkg_version='-3.11.0'
 openshift_master_default_subdomain=apps.okd.example.com
 openshift_disable_check=memory_availability,disk_availability,docker_storage
 retry_files_enabled=False
 retry_files_save_path="~/"
+openshift_master_api_port=443
+openshift_master_console_port=443
 
 #### Metrics
-# openshift_metrics_install_metrics=True
-# openshift_metrics_image_version=v3.11
-# openshift_metrics_hawkular_hostname=hawkular-metrics.apps.okd.example.com
-# openshift_metrics_cassandra_limits_cpu=100m
-# openshift_metrics_cassandra_limits_memory=1Gi
-# openshift_metrics_cassandra_pvc_size=2Gi
-# openshift_metrics_cassandra_storage_type=pv
-# openshift_metrics_hawkular_limits_cpu=200m
-# openshift_metrics_hawkular_requests_cpu=200m
-# openshift_metrics_hawkular_requests_memory=1Gi
-# openshift_metrics_heapster_limits_memory=1Gi
-# openshift_metrics_heapster_requests_memory=1Gi
-# openshift_metrics_cassandra_nodeselector={'node-role.kubernetes.io/infra':'true'}
-# openshift_metrics_hawkular_nodeselector={'node-role.kubernetes.io/infra':'true'}
-# openshift_metrics_heapster_nodeselector={'node-role.kubernetes.io/infra':'true'}
+openshift_metrics_install_metrics=False
+openshift_metrics_image_version=v3.11
+openshift_metrics_hawkular_hostname=hawkular-metrics.apps.okd.example.com
+openshift_metrics_cassandra_limits_cpu=100m
+openshift_metrics_cassandra_limits_memory=1Gi
+openshift_metrics_cassandra_pvc_size=2Gi
+openshift_metrics_cassandra_storage_type=pv
+openshift_metrics_hawkular_limits_cpu=200m
+openshift_metrics_hawkular_requests_cpu=200m
+openshift_metrics_hawkular_requests_memory=1Gi
+openshift_metrics_heapster_limits_memory=1Gi
+openshift_metrics_heapster_requests_memory=1Gi
+openshift_metrics_cassandra_nodeselector={'node-role.kubernetes.io/infra':'true'}
+openshift_metrics_hawkular_nodeselector={'node-role.kubernetes.io/infra':'true'}
+openshift_metrics_heapster_nodeselector={'node-role.kubernetes.io/infra':'true'}
 
 [masters]
 master.example.com
