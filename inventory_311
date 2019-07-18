@@ -14,8 +14,6 @@ openshift_master_default_subdomain=apps.okd.example.com
 openshift_disable_check=memory_availability,disk_availability,docker_storage
 retry_files_enabled=False
 retry_files_save_path="~/"
-openshift_public_ip=192.168.10.10
-BindAddress=192.168.10.10
 
 #### Metrics
 # openshift_metrics_install_metrics=True
@@ -38,9 +36,9 @@ BindAddress=192.168.10.10
 master.example.com
 
 [nodes]
-master.example.com openshift_ip=192.168.10.10 openshift_node_group_name='node-config-master'
-infra.example.com openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_ip=192.168.10.11 openshift_node_group_name='node-config-infra'
-compute.example.com openshift_node_labels="{'region': 'primary', 'zone': 'east'}" openshift_ip=192.168.10.12 openshift_node_group_name='node-config-compute'
+master.example.com openshift_node_group_name='node-config-master'
+infra.example.com openshift_node_group_name='node-config-infra'
+compute.example.com openshift_node_group_name='node-config-compute'
 
 [etcd]
 master.example.com
