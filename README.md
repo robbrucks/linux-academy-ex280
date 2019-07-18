@@ -210,14 +210,14 @@ Web Access
    * As your NON-ROOT user
 
          mkdir ~/github
-         git clone https://github.com/openshift/openshift-ansible.git ~/github
+         git clone https://github.com/openshift/openshift-ansible.git ~/github/openshift-ansible
          cd ~/github/openshift-ansible
          git checkout origin/release-3.11
 
 1. Install this repo
    * As your NON-ROOT user
 
-         git clone git@github.com:robbrucks/linux-academy-ex280.git ~/github
+         git clone git@github.com:robbrucks/linux-academy-ex280.git ~/github/linux-academy-ex280
 
 
 You can use either the github version of the `openshift-ansible` playbooks you cloned in your home directory, or the repo version
