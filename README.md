@@ -60,6 +60,7 @@ All Openshift VMs are the following:
   * Host-Only Network 192.168.10.0/24 (vboxnet0)
   * Gateway 192.168.10.2
   * DNS 192.168.10.2
+  * Search Domains: example.com
 * Disk1
   * 13gb
   * /dev/sda
@@ -142,11 +143,14 @@ Web Access
        # Disable the Epel repo
        yum-config-manager --disable epel
 
-       # Install ansible version 2.6 repo
-       yum -y install centos-release-ansible26
+1. Update /etc/hosts on all VMs
 
-       # Install ansible version 2.6.14
-       yum -y install ansible-2.6.14
+       cat <<EOF2 >> /etc/hosts
+       192.168.10.2 router.example.com router
+       192.168.10.10 master.example.com master
+       192.168.10.11 infra.example.com infra
+       192.168.10.12 compute.example.com compute
+       EOF2
 
 
 ### ON THE ROUTER VM
@@ -180,13 +184,9 @@ Web Access
        address=/compute.example.com/192.168.10.12
        address=/apps.okd.example.com/192.168.10.11
        EOF
-       cat <<EOF2 >> /etc/hosts
-       192.168.10.2 router.example.com router
-       192.168.10.10 master.example.com master
-       192.168.10.11 infra.example.com infra
-       192.168.10.12 compute.example.com compute
-       EOF2
        systemctl enable --now dnsmasq.service
+       firewall-cmd --add-service=dns --perm --zone=internal
+       firewall-cmd --reload
 
 1. Stop NetworkManager from replacing resolv.conf
 
@@ -197,6 +197,14 @@ Web Access
  
        host `hostname`
        host www.google.com
+
+1. Install Ansible 2.6
+
+       # Install ansible version 2.6 repo
+       yum -y install centos-release-ansible26
+
+       # Install ansible version 2.6.14
+       yum -y install ansible-2.6.14
 
 1. Install the openshift 3.11 ansible repo
 
@@ -265,13 +273,13 @@ installed in `/usr/share/ansible/openshift-ansible` on the router VM.
 1. Verify Docker storage is set
    * **ONLY ON THE OPENSHIFT VMS**
 
-       vgs
-       lvs
+         vgs
+         lvs
 
 1. Enable and start docker
    * **ONLY ON THE OPENSHIFT VMS**
 
-       systemctl enable --now docker
+         systemctl enable --now docker
 
 ## INSTALL OPENSHIFT
 
