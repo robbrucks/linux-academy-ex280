@@ -285,6 +285,19 @@ it receives to them. Backing pods can be added to or removed from a service arbi
 available, enabling anything that depends on the service to refer to it at a consistent address. The default service clusterIP
 addresses are from the OKD internal network and they are used to permit pods to access each other.
 
+### Routes
+
+A route exposes a service at a host name, like www.example.com, so that external clients can reach it by name. This will match the
+Server Name Indication (SNI) host name. DNS resolution for a host name is handled separately from routing; your administrator may
+have configured a cloud domain that will always correctly resolve to the OKD router, or if using an unrelated host name you may need
+to modify its DNS records independently to resolve to the router.
+
+### Endpoints
+
+The servers that back a service are called its endpoints, and are specified by an object of type Endpoints with the same name as the
+service. When a service is backed by pods, those pods are normally specified by a label selector in the service specification, and
+OKD automatically creates the Endpoints object pointing to those pods.
+
 ### Builds
 
 A build is the process of transforming input parameters into a resulting object. Most often, the process is used to transform input
