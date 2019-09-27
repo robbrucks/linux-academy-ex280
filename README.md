@@ -41,21 +41,30 @@ Router VM to provide DNS, router services, and for running Ansible Playbooks
 
 
 Openshift VMs:
-* Master Node
-  * Hostname master.example.com
-  * 192.168.10.10 (vboxnet0)
-* Infrastructure Worker Node
-  * Hostname infra.example.com
+* Master Node 1
+  * Hostname master1.example.com
   * 192.168.10.11 (vboxnet0)
-* Compute Worker Node
-  * Hostname compute.example.com
+* Master Node 2
+  * Hostname master2.example.com
   * 192.168.10.12 (vboxnet0)
+* Infrastructure Worker Node 1
+  * Hostname infra1.example.com
+  * 192.168.10.21 (vboxnet0)
+* Infrastructure Worker Node 2
+  * Hostname infra2.example.com
+  * 192.168.10.22 (vboxnet0)
+* Compute Worker Node 1
+  * Hostname compute1.example.com
+  * 192.168.10.31 (vboxnet0)
+* Compute Worker Node 2
+  * Hostname compute2.example.com
+  * 192.168.10.32 (vboxnet0)
 
 
 All Openshift VMs are the following:
 * Centos 7.6.1810 64bit Minimal Install
 * 2 virtual CPUs
-* 4gb RAM
+* 2gb RAM
 * Network
   * Host-Only Network 192.168.10.0/24 (vboxnet0)
   * Gateway 192.168.10.2
@@ -88,9 +97,13 @@ Web Access
    * Add the following /etc/hosts entries:
 
          192.168.10.2 router.example.com router
-         192.168.10.10 master.example.com master
-         192.168.10.11 infra.example.com infra
-         192.168.10.12 compute.example.com compute
+         192.168.10.11 master1.example.com master1
+         192.168.10.12 master2.example.com master2
+         192.168.10.13 master3.example.com master3
+         192.168.10.21 infra1.example.com infra1
+         192.168.10.22 infra2.example.com infra2
+         192.168.10.31 compute1.example.com compute1
+         192.168.10.32 compute2.example.com compute2
 
 1. Clear the local DNS cache
 
@@ -147,9 +160,13 @@ Web Access
 
        cat <<EOF2 >> /etc/hosts
        192.168.10.2 router.example.com router
-       192.168.10.10 master.example.com master
-       192.168.10.11 infra.example.com infra
-       192.168.10.12 compute.example.com compute
+       192.168.10.11 master1.example.com master1
+       192.168.10.12 master2.example.com master2
+       192.168.10.13 master2.example.com master3
+       192.168.10.21 infra1.example.com infra1
+       192.168.10.22 infra2.example.com infra2
+       192.168.10.31 compute1.example.com compute1
+       192.168.10.32 compute2.example.com compute2
        EOF2
 
 
@@ -179,9 +196,13 @@ Web Access
        cat <<EOF > /etc/dnsmasq.d/dnsmasq_lab.conf
        resolv-file=/etc/resolv.dnsmasq
        address=/router.example.com/192.168.10.2
-       address=/master.example.com/192.168.10.10
-       address=/infra.example.com/192.168.10.11
-       address=/compute.example.com/192.168.10.12
+       address=/master1.example.com/192.168.10.11
+       address=/master2.example.com/192.168.10.12
+       address=/master3.example.com/192.168.10.13
+       address=/infra1.example.com/192.168.10.21
+       address=/infra2.example.com/192.168.10.22
+       address=/compute1.example.com/192.168.10.31
+       address=/compute2.example.com/192.168.10.32
        address=/apps.okd.example.com/192.168.10.11
        EOF
        systemctl enable --now dnsmasq.service
