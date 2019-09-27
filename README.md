@@ -99,11 +99,11 @@ Web Access
          192.168.10.2 router.example.com router
          192.168.10.11 master1.example.com master1
          192.168.10.12 master2.example.com master2
-         192.168.10.13 master3.example.com master3
-         192.168.10.21 infra1.example.com infra1
-         192.168.10.22 infra2.example.com infra2
+         192.168.10.21 infra1.example.com infra1 hawkular-metrics.apps.okd.example.com funkybox.example.com funkybox.apps.okd.example.com console.apps.okd.example.com prometheus-k8s-openshift-monitoring.apps.okd.example.com grafana-openshift-monitoring.apps.okd.example.com alertmanager-main-openshift-monitoring.apps.okd.example.com docker-registry-default.apps.okd.example.com registry-console-default.apps.okd.example.com nginx-example-quarantine-compute.apps.okd.example.com kube-ops-view-ocp-ops-view.apps.okd.example.com
+         192.168.10.22 infra2.example.com infra2 hawkular-metrics.apps.okd.example.com funkybox.example.com funkybox.apps.okd.example.com console.apps.okd.example.com prometheus-k8s-openshift-monitoring.apps.okd.example.com grafana-openshift-monitoring.apps.okd.example.com alertmanager-main-openshift-monitoring.apps.okd.example.com docker-registry-default.apps.okd.example.com registry-console-default.apps.okd.example.com nginx-example-quarantine-compute.apps.okd.example.com kube-ops-view-ocp-ops-view.apps.okd.example.com
          192.168.10.31 compute1.example.com compute1
          192.168.10.32 compute2.example.com compute2
+         192.168.10.20 desktop.example.com desktop
 
 1. Clear the local DNS cache
 
