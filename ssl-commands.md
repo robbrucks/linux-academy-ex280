@@ -1,10 +1,11 @@
 h1. SSL Commands
+
 Most of this is gleaned from:
   * https://jamielinux.com/docs/openssl-certificate-authority/sign-server-and-client-certificates.html
 
 h2. Gen a private key
 
-        openssl genrsa -out intermediate/private/openshift.example.com.key.pem 2048
+    openssl genrsa -out intermediate/private/openshift.example.com.key.pem 2048
 
 h2. Create a CSR
 
