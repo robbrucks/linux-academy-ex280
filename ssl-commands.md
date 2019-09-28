@@ -1,56 +1,56 @@
-h1. SSL Commands
+# SSL Commands
 
 Most of this is gleaned from:
   * https://jamielinux.com/docs/openssl-certificate-authority/sign-server-and-client-certificates.html
 
-h2. Gen a private key
+## Gen a private key
 
     openssl genrsa -out intermediate/private/openshift.example.com.key.pem 2048
 
-h2. Create a CSR
+## Create a CSR
 
-        openssl req -config intermediate/openssl.cnf                        \
-                    -new -sha256                                            \
-                    -key intermediate/private/openshift.example.com.key.pem \
-                    -out intermediate/csr/openshift.example.com.csr.pem
+    openssl req -config intermediate/openssl.cnf                        \
+               -new -sha256                                            \
+               -key intermediate/private/openshift.example.com.key.pem \
+               -out intermediate/csr/openshift.example.com.csr.pem
 
-h2. Sign a CSR
+## Sign a CSR
 
-        openssl ca -config intermediate/openssl.cnf                       \
-                   -extensions server_cert -days 750 -notext -md sha256   \
-                   -in intermediate/csr/openshift.example.com.csr.pem     \
-                   -out intermediate/certs/openshift.example.com.cert.pem
+    openssl ca -config intermediate/openssl.cnf                       \
+               -extensions server_cert -days 750 -notext -md sha256   \
+               -in intermediate/csr/openshift.example.com.csr.pem     \
+               -out intermediate/certs/openshift.example.com.cert.pem
 
 
-h2. Create a CSR that contains a SAN
+## Create a CSR that contains a SAN
     * This generates a key and CSR at the same time
 
-        openssl req -new -nodes \
-                  -config intermediate/openshift.san.csr.cnf                  \
-                  -keyout intermediate/private/openshift.example.com.key.pem  \
-                  -out intermediate/csr/openshift.example.com.csr.pem
+    openssl req -new -nodes \
+              -config intermediate/openshift.san.csr.cnf                  \
+              -keyout intermediate/private/openshift.example.com.key.pem  \
+              -out intermediate/csr/openshift.example.com.csr.pem
 
-h2. Sign a CSR that contains a SAN
+## Sign a CSR that contains a SAN
 
         openssl ca -config intermediate/openssl.san.cnf                                    \
                    -extensions server_cert -days 750 -notext -md sha256 -extensions v3_req \
                    -in intermediate/csr/openshift.example.com.csr.pem                      \
                    -out intermediate/certs/openshift.example.com.cert.pem
 
-h2. Examine a CERT
+## Examine a CERT
 
         openssl x509 -noout -text                                          \
                    -in intermediate/certs/openshift.example.com.cert.pem
 
 
-h2. Validate a cert against a CA
+## Validate a cert against a CA
 
         openssl verify -CAfile intermediate/certs/ca-chain.cert.pem        \
               intermediate/certs/www.example.com.cert.pem
 
 
 
-h2. Contents of intermediate/openssl.san.cnf
+## Contents of intermediate/openssl.san.cnf
 
         # OpenSSL intermediate CA configuration file.
         # Copy to `/root/ca/intermediate/openssl.cnf`.
@@ -201,7 +201,7 @@ h2. Contents of intermediate/openssl.san.cnf
 
 
 
-h2. Contents of intermediate/openshift.san.csr.cnf
+## Contents of intermediate/openshift.san.csr.cnf
 
         [ req ]
         # Options for the `req` tool (`man req`).
