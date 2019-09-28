@@ -25,10 +25,10 @@ Most of this is gleaned from:
 ## Create a CSR that contains a SAN
 * This generates a key and CSR at the same time
 
-    openssl req -new -nodes \
-              -config intermediate/openshift.san.csr.cnf                  \
-              -keyout intermediate/private/openshift.example.com.key.pem  \
-              -out intermediate/csr/openshift.example.com.csr.pem
+      openssl req -new -nodes \
+                -config intermediate/openshift.san.csr.cnf                  \
+                -keyout intermediate/private/openshift.example.com.key.pem  \
+                -out intermediate/csr/openshift.example.com.csr.pem
 
 ## Sign a CSR that contains a SAN
 
