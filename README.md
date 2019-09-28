@@ -47,6 +47,9 @@ Openshift VMs:
 * Master Node 2
   * Hostname master2.example.com
   * 192.168.10.12 (vboxnet0)
+* Master Node 3
+  * Hostname master3.example.com
+  * 192.168.10.13 (vboxnet0)
 * Infrastructure Worker Node 1
   * Hostname infra1.example.com
   * 192.168.10.21 (vboxnet0)
@@ -59,6 +62,9 @@ Openshift VMs:
 * Compute Worker Node 2
   * Hostname compute2.example.com
   * 192.168.10.32 (vboxnet0)
+* Load Balancer LB
+  * Hostname lb.example.com
+  * 192.168.10.41 (vboxnet0)
 
 
 All Openshift VMs are the following:
@@ -84,7 +90,7 @@ All Openshift VMs are the following:
 
 Web Access
 * OKD Master Console
-  * https://master.example.com:8443
+  * https://openshift.example.com
 
 ## SETUP
 
@@ -96,15 +102,17 @@ Web Access
 
    * Add the following /etc/hosts entries:
 
+         192.168.10.20 desktop.example.com desktop
          192.168.10.2 router.example.com router
          192.168.10.11 master1.example.com master1
          192.168.10.12 master2.example.com master2
          192.168.10.13 master3.example.com master3
-         192.168.10.21 infra1.example.com infra1 hawkular-metrics.apps.okd.example.com funkybox.example.com funkybox.apps.okd.example.com console.apps.okd.example.com prometheus-k8s-openshift-monitoring.apps.okd.example.com grafana-openshift-monitoring.apps.okd.example.com alertmanager-main-openshift-monitoring.apps.okd.example.com docker-registry-default.apps.okd.example.com registry-console-default.apps.okd.example.com nginx-example-quarantine-compute.apps.okd.example.com kube-ops-view-ocp-ops-view.apps.okd.example.com
-         192.168.10.22 infra2.example.com infra2 hawkular-metrics.apps.okd.example.com funkybox.example.com funkybox.apps.okd.example.com console.apps.okd.example.com prometheus-k8s-openshift-monitoring.apps.okd.example.com grafana-openshift-monitoring.apps.okd.example.com alertmanager-main-openshift-monitoring.apps.okd.example.com docker-registry-default.apps.okd.example.com registry-console-default.apps.okd.example.com nginx-example-quarantine-compute.apps.okd.example.com kube-ops-view-ocp-ops-view.apps.okd.example.com
+         192.168.10.21 infra1.example.com infra1
+         192.168.10.22 infra2.example.com infra2
          192.168.10.31 compute1.example.com compute1
          192.168.10.32 compute2.example.com compute2
-         192.168.10.20 desktop.example.com desktop
+         192.168.10.41 lb.example.com lb
+
 
 1. Clear the local DNS cache
 
@@ -168,6 +176,7 @@ Web Access
        192.168.10.22 infra2.example.com infra2
        192.168.10.31 compute1.example.com compute1
        192.168.10.32 compute2.example.com compute2
+       192.168.10.41 lb.example.com lb
        EOF2
 
 
@@ -196,6 +205,7 @@ Web Access
        echo -e 'search example.com\nnameserver 127.0.0.1' > /etc/resolv.conf
        cat <<EOF > /etc/dnsmasq.d/dnsmasq_lab.conf
        resolv-file=/etc/resolv.dnsmasq
+       resolv-file=/etc/resolv.dnsmasq
        address=/router.example.com/192.168.10.2
        address=/master1.example.com/192.168.10.11
        address=/master2.example.com/192.168.10.12
@@ -204,7 +214,10 @@ Web Access
        address=/infra2.example.com/192.168.10.22
        address=/compute1.example.com/192.168.10.31
        address=/compute2.example.com/192.168.10.32
-       address=/apps.okd.example.com/192.168.10.11
+       address=/lb.example.com/192.168.10.41
+       address=/apps.example.com/192.168.10.41
+       address=/openshift.example.com/192.168.10.41
+       address=/openshift-internal.example.com/192.168.10.41
        EOF
        systemctl enable --now dnsmasq.service
        firewall-cmd --add-service=dns --perm --zone=internal
