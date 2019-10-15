@@ -114,6 +114,45 @@
       oc adm policy who-can get pods
       oc adm policy who-can admin cluster
 
+* List Security Context Constraints (scc)
+
+      oc get scc
+      oc describe scc <scc_name>
+
+* Add/remove scc
+
+      oc adm policy add-scc-to-user <scc_name> <user_name>
+      oc adm policy add-scc-to-group <scc_name> <group_name>
+      oc adm policy remove-scc-from-user <scc_name> <user_name>
+      oc adm policy remove-scc-from-group <scc_name> <group_name>
+
+* Grant to service account in this project
+
+      oc adm policy add-scc-to-user anyuid system:serviceaccount:project-user1:useroot
+
+* Grant to service account in this project (-z)
+
+      oc adm policy add-scc-to-user anyuid -z useroot
+
+* Use service account with scc privs
+
+      oc create serviceaccount useroot
+      oc adm policy add-scc-to-user anyuid -z useroot
+      oc patch dc/demo-app \
+         --patch '{"spec":{"template":{"spec":{"serviceAccountName": "useroot"}}}}'
+      oc rollout latest demo-app
+
+* Create a secrets
+
+      oc create secret generic mysql \
+          --from-literal='database-user'='mysql' \
+          --from-literal='database-password'='redhat' \
+          --from-literal='database-root-password'='root-pwd'
+
+* Display secrets
+
+      oc get secret mysql -o yaml
+
 ## Role Based Access Control (RBAC)
 
 ### Cluster RBAC
@@ -144,6 +183,7 @@ Commonly Used Roles | Description
 * Create a new project
 
       oc new-project linuxacademy --description="ex280 class project"
+      oc new-project demoproject --description="Demonstrate project creation" --display-name="demo_project"
 
 * Delete a project
 
@@ -273,6 +313,9 @@ A container image registry is a service for storing and retrieving Docker-format
 collection of one or more image repositories. Each image repository contains one or more tagged images. Docker provides its own
 registry, the Docker Hub, and you can also use private or third-party registries.
 
+  * NOTE: enabling and disabling registries appears to be set in /etc/sysconfig/docker on all nodes (docker restart required)
+    ** BLOCK_REGISTRY and ADD_REGISTRY
+
 ### Pods
 
 OKD leverages the Kubernetes concept of a pod, which is one or more containers deployed *together on one host*, and the smallest
@@ -325,6 +368,13 @@ hooks to be run before or after creating the replication controller.
 
 ## Creating Applications
 
+* Create a new app from the registry
+
+      oc new-app --name=hello -i php:7.0 http://registry.lab.example.com/scaling
+      oc new-app --name=nginx --docker-image=registry.lab.example.com/nginx:latest
+      oc new-app --name=phpmyadmin --docker-image=registry.lab.example.com/phpmyadmin/phpmyadmin:4.7 \
+         -e PMA\_HOST=mysql.secure-review.svc.cluster.local
+
 * Create test application
 
       oc new-app openshift/hello-openshift
@@ -357,6 +407,11 @@ hooks to be run before or after creating the replication controller.
 * Get current project status
 
       oc status
+      oc status -v
+
+* Get current project events
+
+      oc get events -n <namespace>
 
 * Check pod logs
 
@@ -366,6 +421,21 @@ hooks to be run before or after creating the replication controller.
 * Shell into a pod
 
       oc rsh httpd-ex-1-6mpn8
+
+* Run a command on a pod
+
+      oc exec httpd-ex-1-6mpn8 hostname
+
+* Copy files to/from containers
+
+      oc rsync <pod>:<file> <localdir> [-c <container>]
+      oc rsync <localfile> <pod>:<dir> [-c <container>]
+
+* Start port forwarding
+
+      oc port-forward <pod> [<local_port:]<remote_port>
+      oc port-forward mysql-1-h7ff9z 3306:3306
+      mysql -uroot -predhat -h127.0.0.1  (from another shell session)
 
 * Get deployment configs
 
@@ -379,7 +449,16 @@ hooks to be run before or after creating the replication controller.
 
       oc start-build buildconfigs/django-ex
 
-## Scaling Apps
+* Export yaml or json configuration
+
+      oc export <type> <object>
+      oc export <type> <object> -o json
+
+* Export yaml or json configuration for multiple objects
+
+      oc export svc,dc docker-registry --as-template=docker-registry
+
+## Application Management
 
 * Scaling up pods
 
@@ -396,6 +475,19 @@ hooks to be run before or after creating the replication controller.
 * Auto-scaling (requires cluster metrics)
 
       oc autoscale dc/httpd-ex --min=1 --max=5 --cpu-percent=80
+
+* Rollout a new version of pods and configs
+
+      oc rollout latest <dc>
+
+* Build a docker image from config files
+
+      git clone http://services.lab.example.com/ node-hello
+      docker build -t node-hello:latest .
+      docker images
+      docker tag a9861ee36be4 registry.lab.example.com/node-hello:latest
+      docker images
+      docker push
 
 ## Persistent Storage
 
@@ -428,13 +520,15 @@ Note: "empty directory" means ephemeral storage is used
 
 ## Exposing a service outside the project
 
-* Expose a service
+* Expose a service  (open to port 80)
 
-      oc expose service httpd-ex
+      oc expose --service=httpd-ex --hostname=httpd-ex.classroom.apps.okd.example.com
 
-* Create a route
+* Create a route  (open up with some type of ssl)
 
       oc create route edge --service=httpd-ex --hostname=httpd-ex.classroom.apps.okd.example.com
+
+
 
 # Managing the cluster
 
