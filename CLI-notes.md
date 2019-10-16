@@ -15,6 +15,12 @@
 
       oc explain <objecttype>
 
+* Get detailed help on parameters
+
+      oc explain <fully_qualified_object_parm>
+      oc explain pod.spec.securityContext.fsGroup
+      oc explain pod.spec.securityContext.seLinuxOptions
+
 * Login to a cluster
 
       oc login <cluster>
@@ -432,6 +438,7 @@ hooks to be run before or after creating the replication controller.
 * Get current project events
 
       oc get events -n <namespace>
+      oc get events --sort-by='.metadata.creationTimestamp'
 
 * Check pod logs
 
@@ -549,6 +556,15 @@ Note: "empty directory" means ephemeral storage is used
       oc create route edge --service=httpd-ex --hostname=httpd-ex.classroom.apps.okd.example.com
 
 
+## Software Defined Networking Commands
+
+* Display bridge info
+
+      brctl show <bridge-interface>
+
+* Open V-Switch
+
+      ovs-vsctl show
 
 # Managing the cluster
 
@@ -564,6 +580,11 @@ Note: "empty directory" means ephemeral storage is used
 * Get node details
 
       oc describe node <nodename>
+
+* Get cluster events
+
+      oc get events -n default
+      oc get events --sort-by='.metadata.creationTimestamp' -n default
 
 * List the pods on a node
 
@@ -600,4 +621,11 @@ Note: "empty directory" means ephemeral storage is used
 * Run Cluster Disagnostics
 
       oc adm diagnostics
+
+* Prune the registry
+
+      oc adm prune images --registry-url=${REGISTRY_URL} \
+        --confirm \
+        --keep-tag-revisions=3 \
+        --keep-younger-than=360h 2>&1 | tee prune_15days3rev.log
 
