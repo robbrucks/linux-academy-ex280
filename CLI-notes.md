@@ -2,9 +2,10 @@
 
 # Useful Generic Commands
 
-* CLI Help
+* Openshift CLI Help
 
       oc help
+      oc adm help
 
 * List all the object types (and definitions!)
 
@@ -30,9 +31,23 @@
 
       oc describe <object>
 
-* Edit object configuration
+* Get object details in yaml or json format
+
+      oc get <objecttype> -o yaml
+      oc get <objecttype> -o json
+
+* Edit object configuration interactively
 
       oc edit <objecttype> <object>
+
+* Edit object configuration in batch
+
+      oc patch dc/demo-app \
+         --patch '{"spec":{"template":{"spec":{"serviceAccountName": "useroot"}}}}'
+
+* Edit configuration from yaml or json file
+
+      oc apply -f <file>
 
 * Delete an object
 
@@ -41,6 +56,11 @@
 * Return session information
 
       oc whoami
+
+* Return session token (mainly for docker push/pull registry commands)
+
+      oc whoami -t
+
 
 # Managing Users
 
@@ -394,14 +414,14 @@ hooks to be run before or after creating the replication controller.
 
 ## Viewing objects in a project
 
-* See objects in a project
+* See objects in a project (not really -everything-)
 
       oc get all
 
 * Get all pods in a project
 
       oc get pods
-      oc get pods -o wide       # get more info
+      oc get pods -o wide       # get more info - node info
       oc get pods -n <project>  # show pods for a different project
 
 * Get current project status
@@ -531,6 +551,10 @@ Note: "empty directory" means ephemeral storage is used
 
 
 # Managing the cluster
+
+* Login as cluster administrator from the root user on a master node (if somehow logged out)
+
+      oc login -u system:admin -n default
 
 * Get a list of nodes and status
 

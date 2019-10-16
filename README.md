@@ -245,6 +245,10 @@ Web Access
 
        yum -y install centos-release-openshift-origin311
 
+1. Install the openshift 3.11 oc CLI
+
+       yum -y install origin-clients
+
 1. Install openshift ansible playbooks
 
        yum -y install openshift-ansible
