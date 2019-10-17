@@ -41,6 +41,7 @@
 
       oc get <objecttype> -o yaml
       oc get <objecttype> -o json
+      
 
 * Edit object configuration interactively
 
@@ -167,17 +168,6 @@
       oc patch dc/demo-app \
          --patch '{"spec":{"template":{"spec":{"serviceAccountName": "useroot"}}}}'
       oc rollout latest demo-app
-
-* Create a secrets
-
-      oc create secret generic mysql \
-          --from-literal='database-user'='mysql' \
-          --from-literal='database-password'='redhat' \
-          --from-literal='database-root-password'='root-pwd'
-
-* Display secrets
-
-      oc get secret mysql -o yaml
 
 ## Role Based Access Control (RBAC)
 
@@ -544,6 +534,35 @@ Note: "empty directory" means ephemeral storage is used
 
       oc volume dc/my-dc --add --name=my-persistent-storage \
          -t pvc --claim-name=pvc00001 --overwrite
+
+## Environment Variables, Config Maps, and Secrets
+
+* Set environment variables
+
+      oc set env dc/blog BLOG_BANNER_COLOR=blue BLOG_SITE_NAME="My Blog"
+
+* Unset environment variable (add a dash at the end)
+
+      oc set env dc/blog BLOG_BANNER_COLOR-
+
+* List Environment Variables
+
+      oc set env dc/blog --list
+
+* Create a configmap
+
+      oc create configmap blog-settings-file --from-file blog.json
+
+* Create a secrets
+
+      oc create secret generic mysql \
+          --from-literal='database-user'='mysql' \
+          --from-literal='database-password'='redhat' \
+          --from-literal='database-root-password'='root-pwd'
+
+* Display secrets
+
+      oc get secret mysql -o yaml
 
 ## Exposing a service outside the project
 
