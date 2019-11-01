@@ -506,6 +506,11 @@ hooks to be run before or after creating the replication controller.
       docker images
       docker push
 
+* Search for docker images in any registry
+  * Specify the `ssl` parameter for ssl access to the registry
+
+        docker-registry-cli <registry-hostname> search <search-text> ssl
+
 ## Persistent Storage
 
 * List PVs
@@ -664,4 +669,8 @@ Note: "empty directory" means ephemeral storage is used
         --confirm \
         --keep-tag-revisions=3 \
         --keep-younger-than=360h 2>&1 | tee prune_15days3rev.log
+
+* List installed application templates
+
+      oc get templates -n openshift
 
