@@ -674,3 +674,8 @@ Note: "empty directory" means ephemeral storage is used
 
       oc get templates -n openshift
 
+* Top for nodes (requires metrics be installed)
+
+      oc adm top node --heapster-namespace=openshift-infra --heapster-scheme=https
+      oc adm top node
+
