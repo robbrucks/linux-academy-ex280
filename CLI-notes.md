@@ -52,7 +52,7 @@
       oc patch dc/demo-app \
          --patch '{"spec":{"template":{"spec":{"serviceAccountName": "useroot"}}}}'
 
-* Edit configuration from yaml or json file
+* Modify configuration from yaml or json file
 
       oc apply -f <file>
 
@@ -608,6 +608,23 @@ Note: "empty directory" means ephemeral storage is used
 * List the pods on a node
 
       oc adm manage-node <nodename> --list-pods
+
+* List the labels on a node
+
+      oc get node <nodename> --show-labels
+
+* Change a node label
+
+      oc label node <nodename> <label>=<value> --overwrite=true
+      oc label node <nodename> region=infra --overwrite=true
+
+* List the zones for nodes
+
+      oc get nodes -L zone
+
+* List the regions for nodes
+
+      oc get nodes -L region
 
 * Evacuate and unschedule a node
 
