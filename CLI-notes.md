@@ -266,6 +266,15 @@ storage that may be consumed by resources in that project.
 
       oc create -f <filename.yml> -n <namespace>
 
+* Creating quotas from command line
+
+      oc create quota -n smoke-test-project sample-quota --hard=memory=256Mi \
+         --hard=cpu=1500m --hard=pods=5
+
+* Update resources for deployment configs
+
+      oc set resources dc hello --requests=memory=1Gi
+
 # Limit Ranges
 
 https://docs.okd.io/latest/admin_guide/limits.html
@@ -408,6 +417,10 @@ hooks to be run before or after creating the replication controller.
 
       oc new-app \
          centos/python-35-centos7~https://github.com/sclorg/django-ex
+
+* Delete an app
+
+      oc delete all -l app=hello
 
 ## Viewing objects in a project
 
