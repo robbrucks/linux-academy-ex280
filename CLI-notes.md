@@ -20,6 +20,7 @@
       oc explain <fully_qualified_object_parm>
       oc explain pod.spec.securityContext.fsGroup
       oc explain pod.spec.securityContext.seLinuxOptions
+      oc explain pod.spec.containers.resources
 
 * Login to a cluster
 
