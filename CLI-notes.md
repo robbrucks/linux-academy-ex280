@@ -525,6 +525,17 @@ hooks to be run before or after creating the replication controller.
 
         docker-registry-cli <registry-hostname> search <search-text> ssl
 
+* Test registry by pulling an nginx image
+
+      oc login
+      sudo docker images
+      sudo docker login -p $(oc whoami -t) -u unused <registry-hostname>
+      sudo docker pull <registry-hostname>/openshift/nginx
+      sudo docker images
+      sudo docker rmi $(sudo docker images | grep nginx | awk '{print $3}')
+      sudo docker images
+      sudo docker logout <registry-hostname>
+
 ## Persistent Storage
 
 * List PVs
