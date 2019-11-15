@@ -408,6 +408,7 @@ hooks to be run before or after creating the replication controller.
 
 * Create new app from yaml or json files
 
+      oc new-app --file=mysql-ephemeral.yml
       git clone https://github.com/linuxacademy/content-openshift-ex280.git \
           -b release-3.9
       oc create -f \
