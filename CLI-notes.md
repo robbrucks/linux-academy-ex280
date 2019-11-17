@@ -566,6 +566,14 @@ Note: "empty directory" means ephemeral storage is used
       oc volume dc/my-dc --add --name=my-persistent-storage \
          -t pvc --claim-name=pvc00001 --overwrite
 
+* Change a deployment config to use a PVC
+
+      oc set volume dc/mysqldb --add --overwrite --name=mysqldb-volume-1 -t pvc \
+         --claim-name=mysqldb-pvclaim \
+         --claim-size=3Gi \
+         --claim-mode='ReadWriteMany'
+
+
 ## Environment Variables, Config Maps, and Secrets
 
 * Set environment variables
