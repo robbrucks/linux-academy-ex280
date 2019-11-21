@@ -713,3 +713,25 @@ Note: "empty directory" means ephemeral storage is used
       oc adm top node --heapster-namespace=openshift-infra --heapster-scheme=https
       oc adm top node
 
+* Pull node stats from heapster from command line
+
+      #!/bin/bash
+
+      ## oc login -u admin -p redhat
+      MASTER=master.lab.example.com
+      NODE=node1.lab.example.com
+
+      TOKEN=$(oc whoami -t)
+
+      APIPROXY=https://${MASTER}/api/v1/proxy/namespaces/openshift-infra/services
+      HEAPSTER=https:heapster:/api/v1/model
+      NODE=nodes/${NODE}
+
+      START=$(date -d '1 minute ago' -u '+%FT%TZ')
+
+      curl -kH "Authorization: Bearer $TOKEN" \
+         -X GET $APIPROXY/$HEAPSTER/$NODE/metrics/memory/working_set?start=$START
+
+      curl -kH "Authorization: Bearer $TOKEN" \
+         -X GET $APIPROXY/$HEAPSTER/$NODE/metrics/cpu/usage_rate?start=$START
+
