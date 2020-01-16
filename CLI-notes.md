@@ -394,6 +394,10 @@ hooks to be run before or after creating the replication controller.
 
 ## Creating Applications
 
+* List all available template and image streams
+
+      oc new-app -L
+
 * Create a new app from the registry
 
       oc new-app --name=hello -i php:7.0 http://registry.lab.example.com/scaling
